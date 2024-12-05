@@ -1,24 +1,92 @@
 <template>
-  <div>
-    <h1 class="text-2xl font-bold mb-4">Meus Animais</h1>
-    <p class="text-gray-600">
-      Aqui está a lista dos animais cadastrados na fazenda.
-    </p>
+  <div class="flex flex-col gap-5 h-full">
+    <header>
+      <h1 class="text-2xl font-bold mb-3">Meus Gastos</h1>
 
-    <ul class="mt-4">
-      <li v-for="animal in animals" :key="animal.id" class="p-2 border-b">
-        {{ animal.name }} - {{ animal.type }} ({{ animal.age }} anos)
-      </li>
-    </ul>
+      <div class="flex items-center justify-between gap-4">
+        <p class="text-gray-600">
+          Aqui estão todos os gastos da fazenda no período: <span
+            class="bg-gray-200 rounded-md py-1 px-2 font-medium text-sm">01/12/2024 à 04/12/2024</span>.
+        </p>
+
+        <div class="flex items-center gap-3">
+          <div>
+            <label class="mr-3" for="dataInicio">de: </label>
+            <input id="dataInicio" type="date" class="border-2 rounded-md py-1 px-3 hover:bg-gray-100" />
+          </div>
+
+          <!-- <hr class="border-2 w-8" /> -->
+          <div>
+            <label class="ml-1 mr-3" for="dataFim">até: </label>
+            <input id="dataFim" type="date" class="border-2 rounded-md py-1 px-3 hover:bg-gray-100" />
+          </div>
+
+          <button class="border-2 rounded-md ml-4 p-1 w-36 hover:bg-gray-100" @click="openAddModal">
+            Adicionar gasto
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="flex flex-col gap-5">
+      <h2 class="text-lg font-semibold">Gastos por categoria</h2>
+
+      <div class="flex justify-between gap-6">
+        <ExpenseCard title="🥜 Ração" />
+        <ExpenseCard title="🥜 Mão de Obra" total-expenses="245.54" />
+        <ExpenseCard title="🥜 Limpeza" />
+        <ExpenseCard title="🥜 Pasto" />
+        <ExpenseCard title="🥜 Medicamento" />
+      </div>
+    </section>
+
+    <div class="grid grid-cols-6 gap-8 h-full max-h-full overflow-hidden">
+      <section class="col-span-4 p-6 bg-gray-100 rounded-lg h-full overflow-y-auto">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold">Lista de Gastos</h2>
+
+          <div class="flex items-center gap-4">
+            <Filter class="w-6"/>
+
+            <label for="categorias" class="rounded-lg p-2 border bg-gray-700 border-gray-600 hover:cursor-pointer">
+              <select 
+                name="categorias" 
+                id="categorias" 
+                class="text-sm pr-2 bg-gray-700 placeholder-gray-90 text-white [&>*]:"
+              >
+                <option value="" selected>Filtrar por Categorias</option>
+                <option value="racao">Ração</option>
+                <option value="mao-de-obra">Mão de Obra</option>
+                <option value="limpeza">Limpeza</option>
+                <option value="pasto">Pasto</option>
+                <option value="medicamento">Medicamento</option>
+              </select>
+            </label> 
+          </div>
+        </div>
+
+        <div>
+          <ExpensesList />
+        </div>
+      </section>
+
+      <section class="flex justify-center items-center col-span-2 bg-gray-100 rounded-lg">
+        <div class="w-[80%] h-full pt-6">
+          <DoughnutChart />
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
 <script setup>
-const animals = [
-  { id: 1, name: "Boi Bravo", type: "Boi", age: 5 },
-  { id: 2, name: "Vaca Mimosa", type: "Vaca", age: 3 },
-  { id: 3, name: "Boi Valente", type: "Boi", age: 4 },
-];
+import DoughnutChart from '~/components/DoughnutChart.vue';
+import Filter from '~/components/svg/Filter.vue';
+
+definePageMeta({
+  layout: "expenses",
+});
+
 </script>
 
 <style scoped></style>
