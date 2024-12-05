@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/http": "^0.6.4",
+    "@nuxtjs/proxy": "^2.1.0",
     "chart.js": "^4.4.7",
     "nuxt": "^3.14.1592",
     "vue": "latest",

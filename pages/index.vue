@@ -10,6 +10,11 @@
 import HomeStats from "~/components/HomeStats.vue";
 import Charts from "~/components/Charts.vue";
 
+definePageMeta({
+  middleware: "auth", // Middleware aplicado nesta página
+});
+
+// Dados do dashboard
 const stats = {
   totalProfit: 50000,
   totalExpense: 30000,

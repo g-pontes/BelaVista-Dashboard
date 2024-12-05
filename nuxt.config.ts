@@ -12,4 +12,5 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  plugins: ['~/plugins/fetchInterceptor.js'], // Registra o plugin
 })
