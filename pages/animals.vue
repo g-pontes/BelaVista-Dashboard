@@ -5,7 +5,7 @@
       <p class="text-gray-600">
         Aqui está a lista dos animais cadastrados na fazenda.
       </p>
-      <button class="border-2 rounded-md p-1 w-40 hover:bg-gray-100">Adicionar animal</button>
+      <button class="border-2 rounded-md p-1 w-36 hover:bg-gray-100">Adicionar animal</button>
     </div>
     <ul class="mt-4">
       <li
