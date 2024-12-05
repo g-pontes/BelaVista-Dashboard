@@ -58,10 +58,8 @@ const handleLogin = async () => {
       },
     });
 
-    // Salva o token no localStorage
     localStorage.setItem("token", response.token);
 
-    // Redireciona para o dashboard
     router.push("/");
   } catch (error) {
     console.error("Erro no login:", error);
