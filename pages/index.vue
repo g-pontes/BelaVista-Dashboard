@@ -10,6 +10,10 @@
 import HomeStats from "~/components/HomeStats.vue";
 import Charts from "~/components/Charts.vue";
 
+definePageMeta({
+  middleware: "auth",
+});
+
 const stats = {
   totalProfit: 50000,
   totalExpense: 30000,
