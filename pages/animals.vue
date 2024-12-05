@@ -1,9 +1,12 @@
 <template>
   <div>
     <h1 class="text-2xl font-bold mb-4">Meus Animais</h1>
-    <p class="text-gray-600">
-      Aqui está a lista dos animais cadastrados na fazenda.
-    </p>
+    <div class="flex flex-row justify-between gap-4">
+      <p class="text-gray-600">
+        Aqui está a lista dos animais cadastrados na fazenda.
+      </p>
+      <button class="border-2 rounded-md p-1 w-40 hover:bg-gray-100">Adicionar animal</button>
+    </div>
     <ul class="mt-4">
       <li
         v-for="animal in animals"
