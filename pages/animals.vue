@@ -5,7 +5,12 @@
       <p class="text-gray-600">
         Aqui está a lista dos animais cadastrados na fazenda.
       </p>
-      <button class="border-2 rounded-md p-1 w-36 hover:bg-gray-100">Adicionar animal</button>
+      <button
+        class="border-2 rounded-md p-1 w-36 hover:bg-gray-100"
+        @click="openAddModal"
+      >
+        Adicionar animal
+      </button>
     </div>
     <ul class="mt-4">
       <li
@@ -14,14 +19,15 @@
         class="p-2 border-b cursor-pointer hover:bg-gray-100"
         @click="openEditModal(animal)"
       >
-        {{ animal.name }} - {{ animal.type }} ({{ animal.age }} anos) - {{ animal.color }}
+        {{ animal.name }} - {{ animal.type }} ({{ animal.age}} anos) - {{ animal.color }}
       </li>
     </ul>
-
     <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 class="text-xl font-bold mb-4">Editar Animal</h2>
-        <form @submit.prevent="saveChanges">
+        <h2 class="text-xl font-bold mb-4">
+          {{ isAdding ? 'Adicionar Novo Animal' : 'Editar Animal' }}
+        </h2>
+        <form @submit.prevent="isAdding ? addAnimal() : saveChanges()">
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Nome</label>
@@ -53,6 +59,7 @@
                 v-model="editAnimal.arroba"
                 type="number"
                 class="w-full p-2 border rounded-md"
+                readonly
               />
             </div>
             <div>
@@ -67,39 +74,7 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">Data de Nascimento</label>
               <input
                 v-model="editAnimal.birthDate"
-                type="text"
-                class="w-full p-2 border rounded-md"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Local de Nascimento</label>
-              <input
-                v-model="editAnimal.birthPlace"
-                type="text"
-                class="w-full p-2 border rounded-md"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Filho de</label>
-              <input
-                v-model="editAnimal.parent"
-                type="text"
-                class="w-full p-2 border rounded-md"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Vacina</label>
-              <input
-                v-model="editAnimal.vaccine"
-                type="text"
-                class="w-full p-2 border rounded-md"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Data da Vacina</label>
-              <input
-                v-model="editAnimal.vaccineDate"
-                type="text"
+                type="date"
                 class="w-full p-2 border rounded-md"
               />
             </div>
@@ -157,9 +132,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-
-const peso = 450;
+import { ref, watch } from "vue";
 
 const animals = ref([
   {
@@ -168,7 +141,7 @@ const animals = ref([
     type: "Boi",
     color: "Marrom",
     weight: 450,
-    arroba: peso/15,
+    arroba: "",
     breed: "Nelore",
     birthDate: "2019-05-12",
     birthPlace: "Fazenda Boa Vista",
@@ -184,9 +157,34 @@ const animals = ref([
 
 const isModalOpen = ref(false);
 const editAnimal = ref(null);
+const isAdding = ref(false);
 
 const openEditModal = (animal) => {
   editAnimal.value = { ...animal };
+  isAdding.value = false;
+  isModalOpen.value = true;
+};
+
+const openAddModal = () => {
+  editAnimal.value = {
+    id: Date.now(),
+    name: "",
+    type: "",
+    color: "",
+    weight: null,
+    arroba: null,
+    breed: "",
+    birthDate: "",
+    birthPlace: "",
+    parent: "",
+    vaccine: "",
+    vaccineDate: "",
+    origin: "criado",
+    isSold: false,
+    saleDate: null,
+    saleValue: null,
+  };
+  isAdding.value = true;
   isModalOpen.value = true;
 };
 
@@ -201,4 +199,21 @@ const saveChanges = () => {
   }
   closeModal();
 };
+
+const addAnimal = () => {
+  animals.value.push({ ...editAnimal.value });
+  closeModal();
+};
+
+watch(
+  () => editAnimal.value?.weight,
+  (newWeight) => {
+    if (editAnimal.value) {
+      editAnimal.value.arroba = newWeight ? newWeight / 15 : null;
+    }
+  }
+);
 </script>
+
+<style>
+</style>
