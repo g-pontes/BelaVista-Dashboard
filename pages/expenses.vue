@@ -19,14 +19,13 @@
                 v-model="startDate" />
             </div>
 
-            <!-- <hr class="border-2 w-8" /> -->
             <div>
               <label class="ml-1 mr-3" for="dataFim">até: </label>
               <input id="dataFim" type="date" class="border-2 rounded-md py-1 px-3 hover:bg-gray-100"
                 v-model="endDate" />
             </div>
 
-            <button class="w-6" @click="fetchDataWithNewPeriod">
+            <button class="w-6" @click="fetchExpensesWithNewPeriod">
               <Search />
             </button>
 
@@ -51,11 +50,11 @@
 
       <div class="grid grid-cols-6 gap-8 h-full max-h-full overflow-hidden">
         <section class="col-span-4 p-6 bg-gray-100 rounded-lg h-full overflow-y-auto">
-          <ExpensesList v-if="!isLoadingData" :expenses="expenses" />
+          <ExpensesList v-if="!isLoadingData" :expenses="expenseStore.expenses" />
 
-          <div class="w-full h-full flex justify-center" v-else>
-            <p>
-              Nenhum gasto encontrado no período escolhido
+          <div class="w-full h-full flex justify-center items-center" v-else>
+            <p class="text-lg font-semibold">
+              Carregando...
             </p>
           </div>
         </section>
@@ -71,17 +70,18 @@
 </template>
 
 <script setup>
-import dayjs from '#build/dayjs.imports.mjs';
 import DoughnutChart from '~/components/DoughnutChart.vue';
 import Search from '~/components/svg/Search.vue';
+
+import { useExpenseStore } from '@/stores/expenseStore';
+
+const expenseStore = useExpenseStore();
 
 const POSSIBLE_CATEGORYS = ["racao", "mao-de-obra", "limpeza", "pasto", "medicamento"];
 
 definePageMeta({
   layout: "expenses",
 });
-
-const expenses = ref();
 
 const { currentDay, dateFrom30DaysAgo } = getCurrentMonthPeriod();
 
@@ -92,56 +92,24 @@ const isLoadingData = ref(true);
 
 const categorysValues = ref([]);
 
-async function fetchDataWithNewPeriod() {
-  if (process.client) {
-    isLoadingData.value = true;
-    const token = localStorage.getItem('token');
-
-    const formatedEndDate = dayjs(endDate.value).add(1, 'day').format('YYYY-MM-DD');
-
-    const { data } = await useFetch('http://localhost:5000/api/gastos', {
-      query: {
-        'dataInicio': startDate,
-        'dataFim': formatedEndDate,
-      },
-
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    });
-
-    expenses.value = data.value;
-    updateChart();
-    isLoadingData.value = false;
-  }
+async function fetchExpensesWithNewPeriod() {
+  isLoadingData.value = true;
+  await expenseStore.fetchExpensesWithNewPeriod(startDate, endDate);
+  updateChart();
+  isLoadingData.value = false;
 }
 
 onMounted(async () => {
-  if (process.client) {
-    isLoadingData.value = true;
-    const token = localStorage.getItem('token');
-
-    const data = await $fetch('http://localhost:5000/api/gastos', {
-      query: {
-        'dataInicio': dateFrom30DaysAgo,
-        'dataFim': currentDay
-      },
-
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    });
-
-    expenses.value = data;
-    updateChart();
-    isLoadingData.value = false;
-  }
+  isLoadingData.value = true;
+  await expenseStore.fetchExpenses();
+  updateChart();
+  isLoadingData.value = false;
 });
 
 function calcTotalValueOfCategory(category) {
   let totalValueOfCategory = 0;
 
-  const filtredListByCategory = expenses.value.filter(item => item.categoria === category);
+  const filtredListByCategory = expenseStore.expenses.filter(item => item.categoria === category);
 
   filtredListByCategory.forEach(item => {
     totalValueOfCategory += item.valor;
