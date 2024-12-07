@@ -18,5 +18,5 @@ export default defineNuxtConfig({
   // Registra o plugin
   plugins: ['~/plugins/fetchInterceptor.js'],
 
-  modules: ['dayjs-nuxt']
+  modules: ['dayjs-nuxt', '@pinia/nuxt']
 })
