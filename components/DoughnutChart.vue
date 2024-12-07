@@ -15,6 +15,13 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
 
+const props = defineProps({
+  data: {
+    type: Array<number>,
+    required: true
+  },
+});
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const data = {
@@ -22,14 +29,9 @@ const data = {
 
   datasets: [
     {
-      backgroundColor: ['#7dd3fc', '#7dd3fc', '#7dd3fc', '#7dd3fc'],
-      data: [420.3, 20, 80, 10],
+      backgroundColor: ['#6b7280', '#4b5563', '#374151', '#1f2937', '#030712'],
+      data: props.data
     }
   ]
-}
-
-const options = {
-  responsive: true,
-  maintainAspectRatio: false,
 }
 </script>
