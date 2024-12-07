@@ -109,21 +109,30 @@
               />
             </div>
           </div>
-
-          <div class="flex justify-end mt-4">
+          <div class="flex justify-end mt-4 gap-2">
             <button
               type="button"
-              class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2"
-              @click="closeModal"
+              class="bg-red-500 text-white px-4 py-2 rounded-md"
+              v-if="!isAdding"
+              @click="deleteAnimal"
             >
-              Cancelar
+              Excluir
             </button>
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-              Salvar
-            </button>
+            <div class="flex justify-end">
+              <button
+                type="button"
+                class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2"
+                @click="closeModal"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="bg-blue-500 text-white px-4 py-2 rounded-md"
+              >
+                Salvar
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -202,6 +211,14 @@ const saveChanges = () => {
 
 const addAnimal = () => {
   animals.value.push({ ...editAnimal.value });
+  closeModal();
+};
+
+const deleteAnimal = () => {
+  const index = animals.value.findIndex((a) => a.id === editAnimal.value.id);
+  if (index !== -1) {
+    animals.value.splice(index, 1);
+  }
   closeModal();
 };
 
