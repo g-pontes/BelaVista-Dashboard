@@ -1,3 +1,6 @@
+import { defineStore } from "pinia";
+import api from "~/services/api";
+
 export const useAnimalStore = defineStore("animalStore", {
     state: ()=> ({
         animals: [],
