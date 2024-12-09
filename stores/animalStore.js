@@ -7,31 +7,19 @@ export const useAnimalStore = defineStore('animal', {
     isModalOpen: false,
     editAnimal: null,
     isAdding: false,
-    token: localStorage.getItem('token') || null, 
   }),
   actions: {
-    
-    configureAxios() {
-      if (this.token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+    setAuthHeader() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        axios.defaults.headers['Authorization'] = `Bearer ${token}`;
       } else {
-        delete axios.defaults.headers.common['Authorization'];
+        delete axios.defaults.headers['Authorization'];
       }
     },
 
-    setToken(token) {
-      this.token = token;
-      localStorage.setItem('token', token);
-      this.configureAxios();
-    },
-
-    removeToken() {
-      this.token = null;
-      localStorage.removeItem('token');
-      this.configureAxios(); 
-    },
-
     async fetchAnimals() {
+      this.setAuthHeader();
       try {
         const response = await axios.get('http://localhost:5000/api/animal');
         this.animals = response.data;
@@ -48,6 +36,7 @@ export const useAnimalStore = defineStore('animal', {
 
     openAddModal() {
       this.editAnimal = {
+        nome: '',
         cor: '',
         peso: null,
         arroba: null,
@@ -70,6 +59,7 @@ export const useAnimalStore = defineStore('animal', {
     },
 
     async addAnimal() {
+      this.setAuthHeader();
       try {
         const response = await axios.post('http://localhost:5000/api/animal', this.editAnimal);
         this.animals.push(response.data);
@@ -80,6 +70,7 @@ export const useAnimalStore = defineStore('animal', {
     },
 
     async saveChanges() {
+      this.setAuthHeader();
       try {
         const response = await axios.put(`http://localhost:5000/api/animal/${this.editAnimal.id}`, this.editAnimal);
         const index = this.animals.findIndex(a => a.id === this.editAnimal.id);
@@ -93,12 +84,23 @@ export const useAnimalStore = defineStore('animal', {
     },
 
     async deleteAnimal() {
+      this.setAuthHeader();
       try {
         await axios.delete(`http://localhost:5000/api/animal/${this.editAnimal.id}`);
         this.animals = this.animals.filter(a => a.id !== this.editAnimal.id);
         this.closeModal();
       } catch (error) {
         console.error('Erro ao excluir animal:', error);
+      }
+    },
+
+    async loadAnimal(id) {
+      this.setAuthHeader();
+      try {
+        const response = await axios.get(`http://localhost:5000/api/animal/${id}`);
+        this.editAnimal = response.data;
+      } catch (error) {
+        console.error('Erro ao carregar animal para edição:', error);
       }
     },
   },
