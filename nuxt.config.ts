@@ -13,4 +13,7 @@ export default defineNuxtConfig({
     },
   },
   plugins: ['~/plugins/fetchInterceptor.js'], // Registra o plugin
+  modules: [
+    '@pinia/nuxt', // Adiciona o módulo do Pinia
+  ],
 })
