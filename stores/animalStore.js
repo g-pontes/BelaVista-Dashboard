@@ -29,7 +29,7 @@ export const useAnimalStore = defineStore('animal', {
     },
 
     openEditModal(animal) {
-      this.editAnimal = { ...animal };
+      this.editAnimal = { ...animal }; // Faz uma cópia do animal
       this.isAdding = false;
       this.isModalOpen = true;
     },
@@ -58,22 +58,22 @@ export const useAnimalStore = defineStore('animal', {
       this.isModalOpen = false;
     },
 
-    async addAnimal() {
+    async addAnimal(data) {
       this.setAuthHeader();
       try {
-        const response = await axios.post('http://localhost:5000/api/animal', this.editAnimal);
+        const response = await axios.post('http://localhost:5000/api/animal', data);
         this.animals.push(response.data);
         this.closeModal();
       } catch (error) {
         console.error('Erro ao adicionar animal:', error);
       }
     },
-
-    async saveChanges() {
+    
+    async saveChanges(data) {
       this.setAuthHeader();
       try {
-        const response = await axios.put(`http://localhost:5000/api/animal/${this.editAnimal.id}`, this.editAnimal);
-        const index = this.animals.findIndex(a => a.id === this.editAnimal.id);
+        const response = await axios.put(`http://localhost:5000/api/animal/${data.id}`, data);
+        const index = this.animals.findIndex(a => a.id === data.id);
         if (index !== -1) {
           this.animals[index] = response.data;
         }
@@ -82,25 +82,15 @@ export const useAnimalStore = defineStore('animal', {
         console.error('Erro ao salvar alterações no animal:', error);
       }
     },
+    
 
-    async deleteAnimal() {
+    async deleteAnimal(animal) {
       this.setAuthHeader();
       try {
-        await axios.delete(`http://localhost:5000/api/animal/${this.editAnimal.id}`);
-        this.animals = this.animals.filter(a => a.id !== this.editAnimal.id);
-        this.closeModal();
+        await axios.delete(`http://localhost:5000/api/animal/${animal.id}`);
+        this.animals = this.animals.filter(a => a.id !== animal.id);
       } catch (error) {
         console.error('Erro ao excluir animal:', error);
-      }
-    },
-
-    async loadAnimal(id) {
-      this.setAuthHeader();
-      try {
-        const response = await axios.get(`http://localhost:5000/api/animal/${id}`);
-        this.editAnimal = response.data;
-      } catch (error) {
-        console.error('Erro ao carregar animal para edição:', error);
       }
     },
   },
