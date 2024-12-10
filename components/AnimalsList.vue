@@ -6,7 +6,7 @@
     </p>
     <button 
       @click="openAddModal" 
-      class="bg-green-500 text-white p-2 rounded mb-4"
+      class="bg-gray-700 text-white p-2 rounded mb-4"
     >
       Adicionar Animal
     </button>
