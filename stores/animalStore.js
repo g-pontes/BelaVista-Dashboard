@@ -10,11 +10,13 @@ export const useAnimalStore = defineStore('animal', {
   }),
   actions: {
     setAuthHeader() {
-      const token = localStorage.getItem('token');
-      if (token) {
-        axios.defaults.headers['Authorization'] = `Bearer ${token}`;
-      } else {
-        delete axios.defaults.headers['Authorization'];
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('token');
+        if (token) {
+          axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+          delete axios.defaults.headers['Authorization'];
+        }
       }
     },
 
@@ -29,7 +31,7 @@ export const useAnimalStore = defineStore('animal', {
     },
 
     openEditModal(animal) {
-      this.editAnimal = { ...animal }; // Faz uma cópia do animal
+      this.editAnimal = { ...animal };
       this.isAdding = false;
       this.isModalOpen = true;
     },
@@ -69,11 +71,14 @@ export const useAnimalStore = defineStore('animal', {
       }
     },
     
-    async saveChanges(data) {
+    async saveChanges(payload) {
       this.setAuthHeader();
       try {
-        const response = await axios.put(`http://localhost:5000/api/animal/${data.id}`, data);
-        const index = this.animals.findIndex(a => a.id === data.id);
+        const response = await axios.put(
+          `http://localhost:5000/api/animal/${payload.id}`,
+          payload
+        );
+        const index = this.animals.findIndex(a => a.id === payload.id);
         if (index !== -1) {
           this.animals[index] = response.data;
         }

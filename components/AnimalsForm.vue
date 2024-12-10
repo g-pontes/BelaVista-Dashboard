@@ -109,11 +109,24 @@ const formData = ref({ ...animalStore.editAnimal });
 
 watch(
   () => animalStore.editAnimal,
-  (newAnimal) => {
-    formData.value = { ...newAnimal };
+  (newValue) => {
+    formData.value = {
+      ...newValue,
+      dataNascimento: formatDate(newValue.dataNascimento),
+      dataVenda: newValue.dataVenda ? formatDate(newValue.dataVenda) : '',
+    };
   },
-  { immediate: true, deep: true }
+  { deep: true }
 );
+
+const formatDate = (date) => {
+  if (!date) return '';
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 const calcularArroba = computed(() => {
   return formData.value.peso ? (formData.value.peso / 15).toFixed(2) : '';
@@ -128,10 +141,16 @@ const removeVacina = (index) => {
 };
 
 const submitForm = async () => {
+  const payload = {
+    ...formData.value,
+    dataNascimento: formData.value.dataNascimento || null,
+    dataVenda: formData.value.dataVenda || null,
+  };
+
   if (animalStore.isAdding) {
-    await animalStore.addAnimal(formData.value);
+    await animalStore.addAnimal(payload);
   } else {
-    await animalStore.saveChanges(formData.value);
+    await animalStore.saveChanges(payload);
   }
 };
 
