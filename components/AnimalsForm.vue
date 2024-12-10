@@ -198,6 +198,8 @@
 <script setup>
 import { useAnimalStore } from "@/stores/animalStore";
 import { ref, computed, watch } from "vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const animalStore = useAnimalStore();
 const formData = ref({ ...animalStore.editAnimal });
@@ -244,8 +246,16 @@ const submitForm = async () => {
 
   if (animalStore.isAdding) {
     await animalStore.addAnimal(payload);
+    toast("Animal adicionado!", {
+          type: "success",
+          autoClose: 2000,
+        });
   } else {
     await animalStore.saveChanges(payload);
+    toast("Animal atualizado!", {
+          type: "success",
+          autoClose: 2000,
+        });
   }
 };
 

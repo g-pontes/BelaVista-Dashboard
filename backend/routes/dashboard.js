@@ -44,7 +44,7 @@ router.get("/stats", async (req, res) => {
     ]);
 
     const monthlyStats = await Promise.all(
-        [...Array(6).keys()].map(async (i) => {
+        [...Array(12).keys()].map(async (i) => {
           const month = currentMonth - i >= 0 ? currentMonth - i : 12 + (currentMonth - i);
           const year = currentMonth - i >= 0 ? currentYear : currentYear - 1;
   

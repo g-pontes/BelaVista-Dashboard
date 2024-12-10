@@ -43,6 +43,8 @@
 <script setup>
 import { useAnimalStore } from "@/stores/animalStore";
 import AnimalsForm from "@/components/AnimalsForm.vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const animalStore = useAnimalStore();
 
@@ -56,6 +58,10 @@ const openEditModal = (animal) => {
 
 const deleteAnimal = (animal) => {
   animalStore.deleteAnimal(animal);
+  toast("Animal deletado!", {
+          type: "success",
+          autoClose: 2000,
+        });
 };
 
 animalStore.fetchAnimals();

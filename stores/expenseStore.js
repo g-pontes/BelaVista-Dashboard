@@ -1,5 +1,7 @@
 import dayjs from '#build/dayjs.imports.mjs';
 import { defineStore } from 'pinia';
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 export const useExpenseStore = defineStore('expense', {
   state: () => ({
@@ -106,6 +108,11 @@ export const useExpenseStore = defineStore('expense', {
         });
 
         this.expenses.push(data.value);
+
+        toast("Gasto adicionado!", {
+          type: "success",
+          autoClose: 2000,
+        });
       } catch (error) {
         console.error('Erro ao adicionar gasto:', error);
       }
@@ -131,6 +138,11 @@ export const useExpenseStore = defineStore('expense', {
 
       if (index !== -1) {
         this.expenses[index] = data;
+
+        toast("Gasto atualizado!", {
+          type: "success",
+          autoClose: 2000,
+        });
       }
     },
 
@@ -150,6 +162,11 @@ export const useExpenseStore = defineStore('expense', {
 
       if (index !== -1) {
         this.expenses.splice(index, 1);
+
+        toast("Gasto deletado!", {
+          type: "success",
+          autoClose: 2000,
+        });
       }
     },
   }
