@@ -7,22 +7,42 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
 import HomeStats from "~/components/HomeStats.vue";
 import Charts from "~/components/Charts.vue";
 
-definePageMeta({
-  middleware: "auth",
+const stats = ref({
+  totalProfit: 0,
+  totalExpense: 0,
+  monthlyProfit: 0,
+  monthlyExpense: 0,
 });
 
-const stats = {
-  totalProfit: 50000,
-  totalExpense: 30000,
-  monthlyProfit: 8000,
-  monthlyExpense: 5000,
+const chartData = ref({
+  profit: [],
+  expense: [],
+});
+
+const fetchStats = async () => {
+  try {
+    const response = await $fetch("http://localhost:5000/api/dashboard/stats");
+    stats.value = {
+      totalProfit: response.totalProfit,
+      totalExpense: response.totalExpense,
+      monthlyProfit: response.monthlyProfit,
+      monthlyExpense: response.monthlyExpense,
+    };
+
+    chartData.value = {
+      profit: [response.monthlyProfit],
+      expense: [response.monthlyExpense],
+    };
+  } catch (error) {
+    console.error("Erro ao buscar estatísticas:", error);
+  }
 };
 
-const chartData = {
-  profit: [1000, 2000, 3000, 4000, 5000],
-  expense: [800, 1200, 1500, 1800, 2000],
-};
+onMounted(() => {
+  fetchStats();
+});
 </script>

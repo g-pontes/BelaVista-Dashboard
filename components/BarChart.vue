@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, onUnmounted } from "vue";
 import { Chart } from "chart.js/auto";
 
 const props = defineProps({
@@ -16,6 +16,27 @@ const props = defineProps({
   color: {
     type: String,
     required: true,
+    validator: (value) =>
+      typeof value === "string" &&
+      /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)|(^(rgb|hsl)a?\(.*\)$)|(^[a-zA-Z]+$)/i.test(value),
+  },
+  labels: {
+    type: Array,
+    required: false,
+    default: () => [
+      "Janeiro",
+      "Fevereiro",
+      "Março",
+      "Abril",
+      "Maio",
+      "Junho",
+      "Julho",
+      "Agosto",
+      "Setembro",
+      "Outubro",
+      "Novembro",
+      "Dezembro",
+    ],
   },
 });
 
@@ -23,15 +44,31 @@ const canvas = ref(null);
 let chartInstance = null;
 
 onMounted(() => {
-  if (!props.data || !Array.isArray(props.data)) {
-    console.error("Prop 'data' is missing or invalid.");
-    return;
-  }
+  createChart();
+});
 
+watch(
+  () => [props.data, props.color, props.labels],
+  () => {
+    if (chartInstance) {
+      chartInstance.destroy();
+    }
+    createChart();
+  },
+  { deep: true }
+);
+
+onUnmounted(() => {
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
+});
+
+function createChart() {
   chartInstance = new Chart(canvas.value, {
     type: "line",
     data: {
-      labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"],
+      labels: props.labels,
       datasets: [
         {
           label: "Valor",
@@ -42,17 +79,23 @@ onMounted(() => {
     },
     options: {
       responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (context) => `Valor: ${context.raw}`,
+          },
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: "Valores (R$)",
+          },
+        },
+      },
     },
   });
-});
-
-watch(
-  () => props.data,
-  (newData) => {
-    if (chartInstance) {
-      chartInstance.data.datasets[0].data = newData;
-      chartInstance.update();
-    }
-  }
-);
+}
 </script>

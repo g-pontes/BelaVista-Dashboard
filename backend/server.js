@@ -5,6 +5,7 @@ const connectDB = require("./config/database");
 const animalRoutes = require("./routes/animalRoutes");
 const gastosRoutes = require("./routes/gastosRoutes");
 const authRoutes = require("./routes/authRoutes");
+const dashboardRoutes = require("./routes/dashboard");
 const authMiddleware = require('./middlewares/authMiddleware');
 
 const app = express();
@@ -20,6 +21,7 @@ app.use('/api/protected', authMiddleware);
 app.use("/api", animalRoutes);
 app.use("/api", gastosRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => {
