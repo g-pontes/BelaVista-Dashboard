@@ -39,3 +39,5 @@ onMounted(() => {
   fetchChartData();
 });
 </script>
+
+

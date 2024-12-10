@@ -263,3 +263,5 @@ const closeModal = () => {
   animalStore.closeModal();
 };
 </script>
+
+

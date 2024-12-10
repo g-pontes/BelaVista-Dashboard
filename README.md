@@ -73,3 +73,5 @@ O dashboard da Fazenda Bela Vista foi criado para simplificar a gestão da fazen
 Seja você um produtor rural experiente ou um novato na gestão de fazendas, este sistema foi feito para aumentar sua produtividade e eficiência!
 
 Vamos juntos transformar a gestão da sua fazenda! 🌱
+
+

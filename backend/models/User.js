@@ -19,3 +19,5 @@ UserSchema.methods.verificarSenha = async function (senhaDigitada) {
 };
 
 module.exports = mongoose.model("User", UserSchema);
+
+

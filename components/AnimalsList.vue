@@ -66,3 +66,5 @@ const deleteAnimal = (animal) => {
 
 animalStore.fetchAnimals();
 </script>
+
+

@@ -14,3 +14,5 @@ const GastoSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Gasto", GastoSchema);
+
+

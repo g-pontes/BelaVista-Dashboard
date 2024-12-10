@@ -9,3 +9,4 @@ router.put('/gastos/:id', authMiddleware, gastoController.updateGasto);
 router.delete('/gastos/:id', authMiddleware, gastoController.deleteGasto);
 
 module.exports = router;
+

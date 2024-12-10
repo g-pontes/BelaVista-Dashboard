@@ -9,3 +9,4 @@ router.put('/animal/:id', authMiddleware, animalController.updateAnimal);
 router.delete('/animal/:id', authMiddleware, animalController.deleteAnimal);
 
 module.exports = router;
+

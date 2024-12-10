@@ -140,3 +140,5 @@ watch(() => expenseStore.expenses, () => {
 });
 
 </script>
+
+

@@ -20,3 +20,5 @@ export default defineNuxtConfig({
 
   modules: ['dayjs-nuxt', '@pinia/nuxt']
 })
+
+
