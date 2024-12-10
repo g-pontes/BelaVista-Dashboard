@@ -38,7 +38,6 @@ export const useAnimalStore = defineStore('animal', {
 
     openAddModal() {
       this.editAnimal = {
-        nome: '',
         cor: '',
         peso: null,
         arroba: null,
