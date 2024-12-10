@@ -60,6 +60,11 @@ export const useAnimalStore = defineStore('animal', {
       this.isModalOpen = false;
     },
 
+    cleanPayload(payload) {
+      const { createdAt, updatedAt, __v, ...cleanedPayload } = payload;
+      return cleanedPayload;
+    },
+
     async addAnimal(data) {
       this.setAuthHeader();
       try {
@@ -73,12 +78,13 @@ export const useAnimalStore = defineStore('animal', {
     
     async saveChanges(payload) {
       this.setAuthHeader();
+      const cleanedPayload = this.cleanPayload(payload);
       try {
         const response = await axios.put(
-          `http://localhost:5000/api/animal/${payload.id}`,
-          payload
+          `http://localhost:5000/api/animal/${payload._id}`,
+          cleanedPayload
         );
-        const index = this.animals.findIndex(a => a.id === payload.id);
+        const index = this.animals.findIndex(a => a._id === payload._id);
         if (index !== -1) {
           this.animals[index] = response.data;
         }
@@ -92,8 +98,12 @@ export const useAnimalStore = defineStore('animal', {
     async deleteAnimal(animal) {
       this.setAuthHeader();
       try {
-        await axios.delete(`http://localhost:5000/api/animal/${animal.id}`);
-        this.animals = this.animals.filter(a => a.id !== animal.id);
+        console.log('ID do animal para exclusão:', animal._id); // Verifique o _id aqui
+        if (!animal._id) {
+          throw new Error('ID do animal não encontrado');
+        }
+        await axios.delete(`http://localhost:5000/api/animal/${animal._id}`);
+        this.animals = this.animals.filter(a => a._id !== animal._id);
       } catch (error) {
         console.error('Erro ao excluir animal:', error);
       }
