@@ -41,7 +41,11 @@
             <td>{{ formatedCatetogyNameMap[expense.categoria] || expense.categoria }}</td>
             <td>R${{ expense.valor }}</td>
             <td>{{ formatDate(expense.data) }}</td>
-            <td>Editar</td>
+            <td>
+              <button @click="openModal(expense)" class="w-5">
+                <EditPencil class="w-full" />
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -56,7 +60,12 @@
 </template>
 
 <script setup>
+import { useExpenseStore } from '@/stores/expenseStore';
+
+const { openModal } = useExpenseStore();
+
 import Filter from '~/components/svg/Filter.vue';
+import EditPencil from './svg/EditPencil.vue';
 
 const formatedCatetogyNameMap = {
   racao: "🥜 Ração",

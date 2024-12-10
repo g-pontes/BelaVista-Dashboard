@@ -29,7 +29,7 @@
               <Search />
             </button>
 
-            <button class="border-2 rounded-md ml-4 p-1 w-36 hover:bg-gray-100" @click="openAddModal">
+            <button class="border-2 rounded-md ml-4 p-1 w-36 hover:bg-gray-100" @click="expenseStore.openModal">
               Adicionar gasto
             </button>
           </div>
@@ -59,12 +59,14 @@
           </div>
         </section>
 
-        <section class="flex justify-center items-center col-span-2 bg-gray-100 rounded-lg">
+        <section class="flex flex-col justify-center items-center col-span-2 bg-gray-100 rounded-lg">
           <div class="w-[80%] h-full pt-6">
             <DoughnutChart v-if="!isLoadingData" :data="categorysValues" />
           </div>
         </section>
       </div>
+      
+      <ExpenseForm />
     </div>
   </Suspense>
 </template>
@@ -95,14 +97,12 @@ const categorysValues = ref([]);
 async function fetchExpensesWithNewPeriod() {
   isLoadingData.value = true;
   await expenseStore.fetchExpensesWithNewPeriod(startDate, endDate);
-  updateChart();
   isLoadingData.value = false;
 }
 
 onMounted(async () => {
   isLoadingData.value = true;
   await expenseStore.fetchExpenses();
-  updateChart();
   isLoadingData.value = false;
 });
 
@@ -134,5 +134,9 @@ function updateChart() {
     return item.totalValueOfCategory;
   });
 }
+
+watch(() => expenseStore.expenses, () => {
+  updateChart();
+});
 
 </script>
