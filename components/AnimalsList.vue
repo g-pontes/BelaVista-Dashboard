@@ -16,7 +16,7 @@
         :key="animal.id" 
         class="p-2 border-b"
       >
-        {{ animal.cor }} - {{ animal.raca }} ({{ animal.dataNascimento }})
+        {{ animal.cor }} - {{ animal.raca }} ({{ animal.peso + "Kg"}})
         <button 
           @click="openEditModal(animal)" 
           class="bg-blue-500 text-white p-2 rounded ml-2"

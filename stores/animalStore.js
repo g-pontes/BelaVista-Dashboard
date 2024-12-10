@@ -98,7 +98,7 @@ export const useAnimalStore = defineStore('animal', {
     async deleteAnimal(animal) {
       this.setAuthHeader();
       try {
-        console.log('ID do animal para exclusão:', animal._id); // Verifique o _id aqui
+        console.log('ID do animal para exclusão:', animal._id);
         if (!animal._id) {
           throw new Error('ID do animal não encontrado');
         }
